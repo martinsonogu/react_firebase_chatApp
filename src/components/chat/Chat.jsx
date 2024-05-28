@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './chat.css'
 import EmojiPicker from "emoji-picker-react";
+import { doc, onSnapshot } from 'firebase/firestore'
+import {db} from '../../lib/firebase'
 
 const Chat = () => {
   const [chat, setChat] = useState();
@@ -17,15 +19,15 @@ const Chat = () => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat.messages]);
 
-  // useEffect(() => {
-  //   const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
-  //     setChat(res.data());
-  //   });
+  useEffect(() => {
+    const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
+      setChat(res.data());
+    });
 
-  //   return () => {
-  //     unSub();
-  //   };
-  // }, [chatId]);
+    return () => {
+      unSub();
+    };
+  }, [chatId]);
 
 
   const handleEmoji = (e) => {
@@ -100,11 +102,9 @@ const Chat = () => {
     <div className="chat">
       <div className="top">
         <div className="user">
-          {/* <img src={user?.avatar || "./avatar.png"} alt="" /> */}
-          <img src="./avatar.png" alt="" />
+          <img src={user?.avatar || "./avatar.png"} alt="" />
           <div className="texts">
-            {/* <span>{user?.username}</span> */}
-            <span>Jane Doe</span>
+            <span>{user?.username}</span>
             <p>Lorem ipsum dolor, sit amet.</p>
           </div>
         </div>
